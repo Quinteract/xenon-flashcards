@@ -1,8 +1,7 @@
-<div id="navbar">
-    Xenon Flashcards
-</div>
+<div id="navbar"></div>
 <div id="card"></div>
 <div id="answerbar">
+    <button id="edit">Edit</button>
     <div id="answerbuttons">
         <button id="wrong">Wrong</button>
         <button id="right">Right</button>
@@ -19,7 +18,6 @@
     bottom: 0;
     width: 100%;
     height: 50px;
-    text-align: center;
     border-top: 2px solid black;
 }
 
@@ -30,7 +28,13 @@
     transform: translateX(-50%) translateY(-50%);
 }
 
-#wrong, #right {
+#edit {
+    position: absolute;
+    top:50%;
+    transform: translateY(-50%);
+}
+
+#wrong, #right, #edit {
     margin: 0px 20px;
     padding: 5px;
     font-size: 20px;
@@ -38,11 +42,23 @@
     border-radius: 4px;
 }
 
+#edit:active {
+    background-color: lightgray;
+}
+
 #wrong {
-    background-color: firebrick;
+    background-color: red;
+}
+
+#wrong:active {
+    background-color: darkred;
 }
 
 #right {
-    background-color: olivedrab;
+    background-color: green;
+}
+
+#right:active {
+    background-color: darkgreen;
 }
 </style>
