@@ -1,7 +1,13 @@
+<script>
+    var card = "";
+</script>
+
 <div id="navbar"></div>
 <div id="card"></div>
 <div id="answerbar">
-    <button id="edit">Edit</button>
+    <a href={"/edit" + ((card) ? ("?card=" + card) : "")}>
+        <button id="edit">Edit</button>
+    </a>
     <div id="answerbuttons">
         <button id="wrong">Wrong</button>
         <button id="right">Right</button>
