@@ -12,6 +12,9 @@
         <textarea id="note"></textarea>
     </div>
     <div id="toolbar">
+        <div>
+        <button id="new">New Card</button>
+        </div>
         <a href="/">
             <button id="study">Study</button>
         </a>
@@ -72,13 +75,12 @@
         width: 100%;
         height: 60px;
         bottom: 0px;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
     }
 
-    #study {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
+    #study, #new {
         font-size: 20px;
         border: 2px solid black;
         border-radius: 4px;
@@ -86,7 +88,7 @@
         background: white;
     }
 
-    #study:active {
+    #study:active, #new:active {
         background: gray;
     }
 </style>
