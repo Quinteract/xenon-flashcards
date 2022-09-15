@@ -3,7 +3,13 @@
 </script>
 
 <div id="navbar"></div>
-<div id="card"></div>
+<div id="card">
+    {#if card}
+        {card}
+    {:else}
+        <h2>There are no cards available for review.</h2>
+    {/if}
+</div>
 <div id="answerbar">
     <a href={"/edit" + ((card) ? ("?card=" + card) : "")}>
         <button id="edit">Edit</button>
@@ -17,6 +23,11 @@
 <style>
 * {
     font-family: sans-serif;
+}
+
+h2 {
+    text-align: center;
+    margin-top: 5vh;
 }
 
 #answerbar {
