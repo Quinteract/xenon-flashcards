@@ -60,7 +60,7 @@ h2 {
 }
 
 #edit:active {
-    background-color: lightgray;
+    background-color: gray;
 }
 
 #wrong {
