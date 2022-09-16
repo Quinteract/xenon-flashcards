@@ -1,5 +1,12 @@
 <script>
-    var card = "";
+    import { cards } from '../dbstore.js';
+
+    var card;
+    if ($cards.length > 0) {
+        card = $cards[0];
+    } else {
+        card = "";
+    }
 </script>
 
 <div id="navbar"></div>

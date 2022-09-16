@@ -1,5 +1,6 @@
 <script>
     import { page } from '$app/stores';
+    import { cards, notes } from '../../dbstore.js';
     
     var card = $page.url.searchParams.has('card') ? $page.url.searchParams.get('card') : "";
 </script>
