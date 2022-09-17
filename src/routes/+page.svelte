@@ -1,8 +1,8 @@
 <script>
-    import { cards } from '../dbstore.js';
+    import { cards, notes } from '../dbstore.js';
 
     var card;
-    if ($cards.length > 0) {
+    if ($cards !== null && $cards.length > 0) {
         card = $cards[0];
     } else {
         card = "";
