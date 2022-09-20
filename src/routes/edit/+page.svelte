@@ -34,6 +34,7 @@
             delete $cards[cardid]
         }
         delete $notes[id]
+        $notes = $notes
     }
 </script>
 
