@@ -28,6 +28,13 @@
         noteid = id;
         history.pushState({}, "", "/edit?note=" + id);
     }
+
+    function deleteNote(id) {
+        for (cardid of $notes[id].cards) {
+            delete $cards[cardid]
+        }
+        delete $notes[id]
+    }
 </script>
 
 <div id="browser">
@@ -51,6 +58,9 @@
     <div id="toolbar">
         <div>
             <button id="new" on:click={ createNote }>New Note</button>
+        </div>
+        <div>
+            <button id="delete" on:click={ () => {if (confirm("Delete note?")) {deleteNote(noteid); noteid = null;}} }>Delete Note</button>
         </div>
         <a href="/">
             <button id="study">Study</button>
@@ -130,15 +140,16 @@
         align-items: center;
     }
 
-    #study, #new {
+    #study, #delete, #new {
         font-size: 20px;
         border: 2px solid black;
         border-radius: 4px;
         padding: 5px;
         background: white;
+        cursor: pointer;
     }
 
-    #study:active, #new:active {
+    #study:active, #delete:active, #new:active {
         background: gray;
     }
 
@@ -154,6 +165,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        cursor: pointer;
     }
 
     .notelistentry:hover {

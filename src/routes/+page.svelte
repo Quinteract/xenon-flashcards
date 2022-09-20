@@ -64,6 +64,7 @@ h2 {
     font-size: 20px;
     border: 2px solid black;
     border-radius: 4px;
+    cursor: pointer;
 }
 
 #edit:active {
