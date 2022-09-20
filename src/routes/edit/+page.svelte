@@ -40,7 +40,7 @@
 <div id="browser">
     <input id="query" autocomplete="off">
     <div id="notelist">
-        {#each Object.entries($notes) as [id, note]}
+        {#each Object.entries($notes) as [id, note] (id)}
             <div class="notelistentry" id={ (id === noteid) ? "selected" : "" } on:click={ changeNote(id) }>{note.text}</div>
         {/each}
     </div>

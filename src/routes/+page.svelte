@@ -7,6 +7,8 @@
     } else {
         card = "";
     }
+
+    var flipped = false;
 </script>
 
 <div id="navbar"></div>
@@ -22,8 +24,12 @@
         <button id="edit">Edit</button>
     </a>
     <div id="answerbuttons">
-        <button id="wrong">Wrong</button>
-        <button id="right">Right</button>
+        {#if !flipped}
+            <button id="flip">Flip</button>
+        {:else}
+            <button id="wrong">Wrong</button>
+            <button id="right">Right</button>
+        {/if}
     </div>
 </div>
 
@@ -58,7 +64,7 @@ h2 {
     transform: translateY(-50%);
 }
 
-#wrong, #right, #edit {
+#wrong, #right, #edit, #flip {
     margin: 0px 20px;
     padding: 5px;
     font-size: 20px;
@@ -67,7 +73,7 @@ h2 {
     cursor: pointer;
 }
 
-#edit:active {
+#edit:active, #flip:active {
     background-color: gray;
 }
 
