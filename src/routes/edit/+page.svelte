@@ -1,19 +1,10 @@
 <script>
-    import { browser } from '$app/environment';
     import { page } from '$app/stores';
     import { cards, notes } from '../../dbstore.js';
     
     var noteid = $page.url.searchParams.has('note') ? $page.url.searchParams.get('note') : null;
-    var note = null;
-    $: if (noteid in $notes) {
-        note = $notes[noteid]
-    } else if (browser && noteid !== null) {
-        location.href = '/edit';
-    }
 
-    var notetext = "";
-
-    function genid() {
+    function genId() {
         var id = '';
         var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         for (var i = 0; i < 20; i++) {
@@ -21,30 +12,45 @@
         }
         return id;
     }
+
+    function createNote() {
+        var newnoteid = genId();
+        var newnote = {
+            id: newnoteid,
+            text: "",
+            cards: []
+        };
+        $notes[newnoteid] = newnote;
+        changeNote(id);
+    }
+
+    function changeNote(id) {
+        noteid = id;
+        history.pushState({}, "", "/edit?note=" + id);
+    }
 </script>
 
 <div id="browser">
     <input id="query" autocomplete="off">
     <div id="notelist">
-        {note}
         {#each Object.entries($notes) as [id, note]}
-            <p>{id}</p>
+            <div class="notelistentry" id={ (id === noteid) ? "selected" : "" } on:click={ changeNote(id) }>{id}</div>
         {/each}
     </div>
 </div>
 <div id="editor">
     <div id="notecontainer">
-        {#if noteid !== null}
-            <textarea id="note" bind:value={notetext}></textarea>
+        {#if noteid in $notes}
+            <textarea id="note" bind:value={$notes[noteid].text}></textarea>
+        {:else if noteid}
+            <h2 id="nonote">The selected note does not exist.</h2>
         {:else}
             <h2 id="nonote">No note is selected.</h2>
         {/if}
     </div>
     <div id="toolbar">
         <div>
-        <a href={"/edit?card=" + genid()}>
-            <button id="new">New Note</button>
-        </a>
+            <button id="new" on:click={ createNote }>New Note</button>
         </div>
         <a href="/">
             <button id="study">Study</button>
@@ -108,6 +114,7 @@
 
     #nonote {
         position: absolute;
+        width: 100%;
         top: 50%;
         left: 50%;
         transform: translateX(-50%) translateY(-50%);
@@ -133,5 +140,27 @@
 
     #study:active, #new:active {
         background: gray;
+    }
+
+    #notelist {
+        border-top: 2px solid black;
+        margin-top: 10px;
+    }
+
+    .notelistentry {
+        width: 100%;
+        height: 40px;
+        border-bottom: 1px solid gray;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .notelistentry:hover {
+        background-color: lightgray;
+    }
+
+    #selected {
+        background-color: darkgray;
     }
 </style>
