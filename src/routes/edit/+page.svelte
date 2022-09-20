@@ -41,7 +41,7 @@
     <input id="query" autocomplete="off">
     <div id="notelist">
         {#each Object.entries($notes) as [id, note]}
-            <div class="notelistentry" id={ (id === noteid) ? "selected" : "" } on:click={ changeNote(id) }>{id}</div>
+            <div class="notelistentry" id={ (id === noteid) ? "selected" : "" } on:click={ changeNote(id) }>{note.text}</div>
         {/each}
     </div>
 </div>
@@ -159,13 +159,17 @@
     }
 
     .notelistentry {
-        width: 100%;
+        width: 100% - 5px;
         height: 40px;
+        line-height: 40px;
         border-bottom: 1px solid gray;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        display: block;
+        padding: 0px 5px;
         cursor: pointer;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        text-align: left;
     }
 
     .notelistentry:hover {
