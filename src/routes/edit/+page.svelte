@@ -1,12 +1,16 @@
 <script>
-    import { page } from '$app/stores';
-    import { cards, notes } from '../../dbstore.js';
-    
-    var noteid = $page.url.searchParams.has('note') ? $page.url.searchParams.get('note') : null;
+    import { page } from "$app/stores";
+    import { cards, notes } from "../../dbstore.js";
+    import { onMount } from "svelte";
+
+    var noteid = $page.url.searchParams.has("note")
+        ? $page.url.searchParams.get("note")
+        : null;
 
     function genId() {
-        var id = '';
-        var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var id = "";
+        var chars =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         for (var i = 0; i < 20; i++) {
             id += chars[Math.floor(Math.random() * chars.length)];
         }
@@ -18,10 +22,10 @@
         var newnote = {
             id: newnoteid,
             text: "",
-            cards: []
+            cards: [],
         };
         $notes[newnoteid] = newnote;
-        changeNote(id);
+        changeNote(newnoteid);
     }
 
     function changeNote(id) {
@@ -30,26 +34,85 @@
     }
 
     function deleteNote(id) {
-        for (cardid of $notes[id].cards) {
-            delete $cards[cardid]
+        for (var cardid of $notes[id].cards) {
+            if (cardid in $cards) {
+                delete $cards[cardid];
+            }
         }
-        delete $notes[id]
-        $notes = $notes
+        $cards = $cards;
+        delete $notes[id];
+        $notes = $notes;
     }
+
+    function compileNote(noteid) {
+        var generatedcards = [];
+
+        // Compilation for a basic single-line front-back card with no formatting
+        var notetext = $notes[noteid].text;
+        var split = notetext.split("\n");
+        if (split.length > 1) {
+            var cardfront = split[0];
+            var cardback = split[1];
+            var cardid = genId();
+            var card = {
+                id: cardid,
+                front: cardfront,
+                back: cardback,
+            };
+            generatedcards.push(card);
+        }
+
+        // Add generated cards
+        for (var i = 0; i < generatedcards.length; i++) {
+            var card = generatedcards[i];
+            if (i < $notes[noteid].cards.length) {
+                card.id = $notes[noteid].cards[i];
+                $cards[card.id] = card;
+            } else {
+                $notes[noteid].cards.push(card.id);
+                $cards[card.id] = card;
+            }
+        }
+        for (; i < $notes[noteid].cards.length; i++) {
+            delete $cards[$notes[noteid].cards[i]];
+        }
+        $notes = $notes;
+        $cards = $cards;
+    }
+
+    onMount(() => {
+        document.addEventListener("keypress", (event) => {
+            if (event.key == "z") {
+                alert("Reset.");
+                $cards = {};
+                $notes = {};
+            }
+        });
+    });
 </script>
 
 <div id="browser">
-    <input id="query" autocomplete="off">
+    <input id="query" autocomplete="off" />
     <div id="notelist">
         {#each Object.entries($notes) as [id, note] (id)}
-            <div class="notelistentry" id={ (id === noteid) ? "selected" : "" } on:click={ changeNote(id) }>{note.text}</div>
+            <div
+                class="notelistentry"
+                id={id === noteid ? "selected" : ""}
+                on:click={changeNote(id)}
+            >
+                {note.text}
+            </div>
         {/each}
     </div>
 </div>
 <div id="editor">
     <div id="notecontainer">
         {#if noteid in $notes}
-            <textarea id="note" bind:value={$notes[noteid].text}></textarea>
+            <textarea
+                id="note"
+                bind:value={$notes[noteid].text}
+                on:input={compileNote(noteid)}
+            />
         {:else if noteid}
             <h2 id="nonote">The selected note does not exist.</h2>
         {:else}
@@ -58,10 +121,18 @@
     </div>
     <div id="toolbar">
         <div>
-            <button id="new" on:click={ createNote }>New Note</button>
+            <button id="new" on:click={createNote}>New Note</button>
         </div>
         <div>
-            <button id="delete" on:click={ () => {if (confirm("Delete note?")) {deleteNote(noteid); noteid = null;}} }>Delete Note</button>
+            <button
+                id="delete"
+                on:click={() => {
+                    if (confirm("Delete note?")) {
+                        deleteNote(noteid);
+                        noteid = null;
+                    }
+                }}>Delete Note</button
+            >
         </div>
         <a href="/">
             <button id="study">Study</button>
@@ -141,7 +212,9 @@
         align-items: center;
     }
 
-    #study, #delete, #new {
+    #study,
+    #delete,
+    #new {
         font-size: 20px;
         border: 2px solid black;
         border-radius: 4px;
@@ -150,7 +223,9 @@
         cursor: pointer;
     }
 
-    #study:active, #delete:active, #new:active {
+    #study:active,
+    #delete:active,
+    #new:active {
         background: gray;
     }
 
