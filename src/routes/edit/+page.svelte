@@ -89,19 +89,23 @@
             }
         });
     });
+
+    var query = "";
 </script>
 
 <div id="browser">
-    <input id="query" autocomplete="off" />
+    <input id="query" autocomplete="off" bind:value={query} />
     <div id="notelist">
         {#each Object.entries($notes) as [id, note] (id)}
-            <div
-                class="notelistentry"
-                id={id === noteid ? "selected" : ""}
-                on:click={changeNote(id)}
-            >
-                {note.text}
-            </div>
+            {#if query === "" || note.text.toLowerCase().includes(query.toLowerCase())}
+                <div
+                    class="notelistentry"
+                    id={id === noteid ? "selected" : ""}
+                    on:click={changeNote(id)}
+                >
+                    {note.text}
+                </div>
+            {/if}
         {/each}
     </div>
 </div>
@@ -156,10 +160,11 @@
 
     #query {
         width: 90%;
+        height: 24px;
         font-size: 20px;
         border: 2px solid black;
         border-radius: 4px;
-        margin-top: 10px;
+        margin: 10px 0px;
         text-align: left;
         padding: 5px;
     }
@@ -231,7 +236,8 @@
 
     #notelist {
         border-top: 2px solid black;
-        margin-top: 10px;
+        height: calc(100% - 60px);
+        overflow: auto;
     }
 
     .notelistentry {
@@ -239,7 +245,6 @@
         height: 40px;
         line-height: 40px;
         border-bottom: 1px solid gray;
-        display: block;
         padding: 0px 5px;
         cursor: pointer;
         text-overflow: ellipsis;
