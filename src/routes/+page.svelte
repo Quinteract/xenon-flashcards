@@ -1,27 +1,46 @@
 <script>
     import { cards } from "../dbstore.js";
+    import { onMount } from "svelte";
 
-    var card = null;
-    if ($cards != null && Object.keys($cards).length > 0) {
-        card = $cards[Object.keys($cards)[0]];
+    var cardid = null;
+
+    function selectRandomCard() {
+        if ($cards != null && Object.keys($cards).length > 0) {
+            var cardids = Object.keys($cards);
+            cardid = cardids[Math.floor(cardids.length * Math.random())];
+        }
     }
 
     var flipped = false;
+
+    function wrongAnswer() {
+        flipped = false;
+        selectRandomCard();
+    }
+
+    function rightAnswer() {
+        flipped = false;
+        selectRandomCard();
+    }
+
+    onMount(() => {
+        selectRandomCard();
+    });
 </script>
 
 <div id="card">
-    {#if card != null}
+    {#if cardid !== null}
         {#if !flipped}
-            {card.front}
+            {$cards[cardid].front}
         {:else}
-            {card.back}
+            {$cards[cardid].back}
         {/if}
     {:else}
         <h2>There are no cards available for review.</h2>
     {/if}
 </div>
 <div id="answerbar">
-    <a href={"/edit" + (card ? "?card=" + card : "")}>
+    <a href={"/edit" + (cardid ? "?card=" + cardid : "")}>
         <button id="edit">Edit</button>
     </a>
     <div id="answerbuttons">
@@ -33,8 +52,8 @@
                 }}>Flip</button
             >
         {:else}
-            <button id="wrong">Wrong</button>
-            <button id="right">Right</button>
+            <button id="wrong" on:click={wrongAnswer}>Wrong</button>
+            <button id="right" on:click={rightAnswer}>Right</button>
         {/if}
     </div>
 </div>
@@ -101,5 +120,11 @@
 
     #right:active {
         background-color: darkgreen;
+    }
+
+    #card {
+        text-align: center;
+        padding: 20px;
+        font-size: 20px;
     }
 </style>
